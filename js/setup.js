@@ -1,4 +1,5 @@
 'use strict';
+
 var NAMES = [
   'Иван',
   'Хуан Себастьян',
@@ -39,7 +40,6 @@ var similarWizardObjectKeys = [
   'name',
   'coatColor',
   'eyesColor'];
-var k = makeSimilarWizard(similarWizardObjectKeys, similarWizardObjectProperties);
 var similarWizardsList = makeSimilarWizardsList(similarWizardObjectKeys, similarWizardObjectProperties, 4);
 var userDialog = document.querySelector('.setup');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
