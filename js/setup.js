@@ -1,5 +1,6 @@
 'use strict';
-
+var ESC_KEY_CODE = 27;
+var ENTER_KEY_CODE = 13;
 var NAMES = [
   'Иван',
   'Хуан Себастьян',
@@ -31,6 +32,13 @@ var EYES_COLOR = [
   'blue',
   'yellow',
   'green'];
+var FIREBALL_COLOR = [
+  '#ee4830',
+  '#30a8ee',
+  '#5ce6c0',
+  '#e848d5',
+  '#e6e848'
+];
 var similarWizardObjectProperties = [
   NAMES,
   SURNAMES,
@@ -44,8 +52,64 @@ var similarWizardsList = makeSimilarWizardsList(similarWizardObjectKeys, similar
 var userDialog = document.querySelector('.setup');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
 var similarListElement = userDialog.querySelector('.setup-similar-list');
-var similarParentNode = userDialog.querySelector('.setup-similar');
+// var similarParentNode = userDialog.querySelector('.setup-similar');
 var fragment = document.createDocumentFragment();
+var setup = document.querySelector('.setup');
+var setupOpen = document.querySelector('.setup-open');
+var setupClose = setup.querySelector('.setup-close');
+var setupOpenIcon = setupOpen.querySelector('.setup-open-icon');
+var setupSubmit = setup.querySelector('.setup-submit');
+var setupUserName = setup.querySelector('.setup-user-name');
+var wizardCoat = setup.querySelector('.wizard-coat');
+var wizardEyes = setup.querySelector('.wizard-eyes');
+var fireball = setup.querySelector('.setup-fireball-wrap');
+var onEnterKeydownShowSetup = function (evt) {
+  if (isCertainKeyDown(evt, ENTER_KEY_CODE)) {
+    showElement(setup);
+    addHandlersOnSetup();
+  }
+};
+var onEscKeydownHideSetup = function (evt) {
+  if (isCertainKeyDown(evt, ESC_KEY_CODE) && evt.target !== setupUserName) {
+    hideElement(setup);
+    removeHandlersOnSetup();
+  }
+};
+var onEnterKeydownHideSetup = function (evt) {
+  if (isCertainKeyDown(evt, ENTER_KEY_CODE)) {
+    hideElement(setup);
+    removeHandlersOnSetup();
+  }
+};
+var onButtonClickHideSetup = function () {
+  hideElement(setup);
+  removeHandlersOnSetup();
+};
+var onButtonClickShowSetup = function () {
+  showElement(setup);
+  addHandlersOnSetup();
+};
+var onCoatClick = function () {
+  changeElementFill(wizardCoat, COAT_COLOR);
+};
+var onEyesClick = function () {
+  changeElementFill(wizardEyes, EYES_COLOR);
+};
+var onFireballClick = function () {
+  changeElementBackground(fireball, FIREBALL_COLOR);
+};
+
+function showElement(element) {
+  element.classList.remove('hidden');
+}
+
+function hideElement(element) {
+  element.classList.add('hidden');
+}
+
+function isCertainKeyDown(evt, certainKeyCode) {
+  return evt.keyCode === certainKeyCode;
+}
 
 function getRandomNumer(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -88,6 +152,36 @@ function renderWizards(templateContent, wizards, documentFragment) {
   return documentFragment;
 }
 
+function changeElementFill(element, colorsList) {
+  element.style.fill = getRandomProperty(colorsList);
+}
+
+function changeElementBackground(element, colorsList) {
+  element.style.background = getRandomProperty(colorsList);
+}
+
+function addHandlersOnSetup() {
+  setupSubmit.addEventListener('click', onButtonClickHideSetup);
+  document.addEventListener('keydown', onEscKeydownHideSetup);
+  setupSubmit.addEventListener('keydown', onEnterKeydownHideSetup);
+  setupClose.addEventListener('keydown', onEnterKeydownHideSetup);
+  setupClose.addEventListener('click', onButtonClickHideSetup);
+  wizardCoat.addEventListener('click', onCoatClick);
+  wizardEyes.addEventListener('click', onEyesClick);
+  fireball.addEventListener('click', onFireballClick);
+}
+
+function removeHandlersOnSetup() {
+  setupSubmit.removeEventListener('click', onButtonClickHideSetup);
+  document.removeEventListener('keydown', onEscKeydownHideSetup);
+  setupSubmit.removeEventListener('keydown', onEnterKeydownHideSetup);
+  setupClose.removeEventListener('keydown', onEnterKeydownHideSetup);
+  setupClose.removeEventListener('click', onButtonClickHideSetup);
+  wizardCoat.removeEventListener('click', onCoatClick);
+  wizardEyes.removeEventListener('click', onEyesClick);
+  fireball.removeEventListener('click', onFireballClick);
+}
+
 similarListElement.appendChild(renderWizards(similarWizardTemplate, similarWizardsList, fragment));
-userDialog.classList.remove('hidden');
-similarParentNode.classList.remove('hidden');
+setupOpen.addEventListener('click', onButtonClickShowSetup);
+setupOpenIcon.addEventListener('keydown', onEnterKeydownShowSetup);
