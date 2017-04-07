@@ -1,6 +1,8 @@
 'use strict';
+
 var ESC_KEY_CODE = 27;
 var ENTER_KEY_CODE = 13;
+
 var NAMES = [
   'Иван',
   'Хуан Себастьян',
@@ -10,6 +12,7 @@ var NAMES = [
   'Юлия',
   'Люпита',
   'Вашингтон'];
+
 var SURNAMES = [
   'да Марья',
   'Верон',
@@ -19,6 +22,7 @@ var SURNAMES = [
   'Топольницкая',
   'Нионго',
   'Ирвинг'];
+
 var COAT_COLOR = [
   'rgb(101, 137, 164)',
   'rgb(241, 43, 107)',
@@ -26,12 +30,14 @@ var COAT_COLOR = [
   'rgb(56, 159, 117)',
   'rgb(215, 210, 55)',
   'rgb(0, 0, 0)'];
+
 var EYES_COLOR = [
   'black',
   'red',
   'blue',
   'yellow',
   'green'];
+
 var FIREBALL_COLOR = [
   '#ee4830',
   '#30a8ee',
@@ -39,21 +45,27 @@ var FIREBALL_COLOR = [
   '#e848d5',
   '#e6e848'
 ];
+
 var similarWizardObjectProperties = [
   NAMES,
   SURNAMES,
   COAT_COLOR,
   EYES_COLOR];
+
 var similarWizardObjectKeys = [
   'name',
   'coatColor',
   'eyesColor'];
+
 var similarWizardsList = makeSimilarWizardsList(similarWizardObjectKeys, similarWizardObjectProperties, 4);
+
 var userDialog = document.querySelector('.setup');
 var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
 var similarListElement = userDialog.querySelector('.setup-similar-list');
 // var similarParentNode = userDialog.querySelector('.setup-similar');
+
 var fragment = document.createDocumentFragment();
+
 var setup = document.querySelector('.setup');
 var setupOpen = document.querySelector('.setup-open');
 var setupClose = setup.querySelector('.setup-close');
@@ -63,38 +75,61 @@ var setupUserName = setup.querySelector('.setup-user-name');
 var wizardCoat = setup.querySelector('.wizard-coat');
 var wizardEyes = setup.querySelector('.wizard-eyes');
 var fireball = setup.querySelector('.setup-fireball-wrap');
+var setupForm = setup.querySelector('.setup-wizard-form');
+
 var onEnterKeydownShowSetup = function (evt) {
   if (isCertainKeyDown(evt, ENTER_KEY_CODE)) {
     showElement(setup);
     addHandlersOnSetup();
   }
 };
+
 var onEscKeydownHideSetup = function (evt) {
   if (isCertainKeyDown(evt, ESC_KEY_CODE) && evt.target !== setupUserName) {
     hideElement(setup);
     removeHandlersOnSetup();
   }
 };
+
 var onEnterKeydownHideSetup = function (evt) {
   if (isCertainKeyDown(evt, ENTER_KEY_CODE)) {
     hideElement(setup);
     removeHandlersOnSetup();
   }
 };
+
+var onEnterKeydownCheckAndHideSetup = function (evt) {
+  if (isCertainKeyDown(evt, ENTER_KEY_CODE) && setupForm.validity.valid) {
+    hideElement(setup);
+    removeHandlersOnSetup();
+  }
+};
+
 var onButtonClickHideSetup = function () {
   hideElement(setup);
   removeHandlersOnSetup();
 };
+
+var onButtonClickCheckAndHideSetup = function () {
+  if (setupForm.validity.valid) {
+    hideElement(setup);
+    removeHandlersOnSetup();
+  }
+};
+
 var onButtonClickShowSetup = function () {
   showElement(setup);
   addHandlersOnSetup();
 };
+
 var onCoatClick = function () {
   changeElementFill(wizardCoat, COAT_COLOR);
 };
+
 var onEyesClick = function () {
   changeElementFill(wizardEyes, EYES_COLOR);
 };
+
 var onFireballClick = function () {
   changeElementBackground(fireball, FIREBALL_COLOR);
 };
@@ -111,12 +146,12 @@ function isCertainKeyDown(evt, certainKeyCode) {
   return evt.keyCode === certainKeyCode;
 }
 
-function getRandomNumer(min, max) {
+function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function getRandomProperty(array) {
-  var item = array[getRandomNumer(0, array.length - 1)];
+  var item = array[getRandomNumber(0, array.length - 1)];
   return item;
 }
 
@@ -161,9 +196,9 @@ function changeElementBackground(element, colorsList) {
 }
 
 function addHandlersOnSetup() {
-  setupSubmit.addEventListener('click', onButtonClickHideSetup);
+  setupSubmit.addEventListener('click', onButtonClickCheckAndHideSetup);
   document.addEventListener('keydown', onEscKeydownHideSetup);
-  setupSubmit.addEventListener('keydown', onEnterKeydownHideSetup);
+  setupSubmit.addEventListener('keydown', onEnterKeydownCheckAndHideSetup);
   setupClose.addEventListener('keydown', onEnterKeydownHideSetup);
   setupClose.addEventListener('click', onButtonClickHideSetup);
   wizardCoat.addEventListener('click', onCoatClick);
@@ -172,9 +207,9 @@ function addHandlersOnSetup() {
 }
 
 function removeHandlersOnSetup() {
-  setupSubmit.removeEventListener('click', onButtonClickHideSetup);
+  setupSubmit.removeEventListener('click', onButtonClickCheckAndHideSetup);
   document.removeEventListener('keydown', onEscKeydownHideSetup);
-  setupSubmit.removeEventListener('keydown', onEnterKeydownHideSetup);
+  setupSubmit.removeEventListener('keydown', onEnterKeydownCheckAndHideSetup);
   setupClose.removeEventListener('keydown', onEnterKeydownHideSetup);
   setupClose.removeEventListener('click', onButtonClickHideSetup);
   wizardCoat.removeEventListener('click', onCoatClick);
