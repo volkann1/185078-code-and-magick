@@ -1,6 +1,6 @@
 'use strict';
 window.renderStatistics = function (ctx, names, times) {
-  var max = getMaxElement(times, -1);
+  var max = window.utils.getMaxItemFromArray(times, -1);
   var histogramHeight = 150;
   var step = histogramHeight / max;
   var histogramColumnWidth = 40;
@@ -17,16 +17,6 @@ window.renderStatistics = function (ctx, names, times) {
     if (arrayElement === columnName) {
       ctx.fillStyle = color;
     }
-  }
-
-  function getMaxElement(array, maxProperty) {
-    for (var i = 0; i < array.length; i++) {
-      var property = array[i];
-      if (property > maxProperty) {
-        maxProperty = property;
-      }
-    }
-    return maxProperty;
   }
 
   ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
@@ -48,5 +38,4 @@ window.renderStatistics = function (ctx, names, times) {
     ctx.fillText(names[i], histogramColumnX, 270);
     ctx.fillText(times[i].toFixed(0), histogramColumnX, histogramColumnY - 10);
   }
-
 };
