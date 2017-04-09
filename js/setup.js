@@ -10,6 +10,10 @@
   var wizardEyes = setup.querySelector('.wizard-eyes');
   var fireball = setup.querySelector('.setup-fireball-wrap');
   var setupForm = setup.querySelector('.setup-wizard-form');
+  var shopElement = setup.querySelector('.setup-artifacts-shop');
+  var draggedItem = null;
+  var artifactsElement = setup.querySelector('.setup-artifacts');
+
 
   var onEnterKeydownShowSetup = function (evt) {
     if (window.utils.isEnterKeyDown(evt)) {
@@ -68,6 +72,19 @@
     window.recolor.changeElementColor(fireball, window.recolor.fireballColor, window.recolor.changeElementBackground);
   };
 
+  var onElementDragstart = function (evt) {
+    if (evt.target.tagName.toLowerCase() === 'img') {
+      draggedItem = evt.target;
+      evt.dataTransfer.setData('text/plain', evt.target.alt);
+      artifactsElement.classList.add('setup-artifacts--on-drag-start');
+    }
+  };
+
+  var onElementDragover = function (evt) {
+    evt.preventDefault();
+    return false;
+  };
+
   function addHandlersOnSetup() {
     setupSubmit.addEventListener('click', onButtonClickCheckAndHideSetup);
     document.addEventListener('keydown', onEscKeydownHideSetup);
@@ -77,6 +94,8 @@
     wizardCoat.addEventListener('click', onCoatClick);
     wizardEyes.addEventListener('click', onEyesClick);
     fireball.addEventListener('click', onFireballClick);
+    shopElement.addEventListener('dragstart', onElementDragstart);
+    artifactsElement.addEventListener('draggover', onElementDragover);
   }
 
   function removeHandlersOnSetup() {
@@ -92,4 +111,6 @@
 
   setupOpen.addEventListener('click', onButtonClickShowSetup);
   setupOpenIcon.addEventListener('keydown', onEnterKeydownShowSetup);
+
+
 })();
