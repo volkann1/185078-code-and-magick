@@ -11,6 +11,28 @@
   var fireball = setup.querySelector('.setup-fireball-wrap');
   var setupForm = setup.querySelector('.setup-wizard-form');
 
+  var coatColor = [
+    'rgb(101, 137, 164)',
+    'rgb(241, 43, 107)',
+    'rgb(146, 100, 161)',
+    'rgb(56, 159, 117)',
+    'rgb(215, 210, 55)',
+    'rgb(0, 0, 0)'];
+
+  var eyesColor = [
+    'black',
+    'red',
+    'blue',
+    'yellow',
+    'green'];
+
+  var fireballColor = [
+    '#ee4830',
+    '#30a8ee',
+    '#5ce6c0',
+    '#e848d5',
+    '#e6e848'];
+
   var onEnterKeydownShowSetup = function (evt) {
     if (window.utils.isEnterKeyDown(evt)) {
       window.utils.showElement(setup);
@@ -57,16 +79,21 @@
   };
 
   var onCoatClick = function () {
-    window.recolor.changeElementColor(wizardCoat, window.recolor.coatColor, window.recolor.changeElementFill);
+    window.recolor.changeElementColor(wizardCoat, coatColor, changeElementFill);
   };
 
   var onEyesClick = function () {
-    window.recolor.changeElementColor(wizardEyes, window.recolor.eyesColor, window.recolor.changeElementFill);
+    window.recolor.changeElementColor(wizardEyes, eyesColor, changeElementFill);
   };
 
   var onFireballClick = function () {
-    window.recolor.changeElementColor(fireball, window.recolor.fireballColor, window.recolor.changeElementBackground);
+    window.recolor.changeElementColor(fireball, fireballColor, function (element, color) {
+      element.style.background = color;
+    });
   };
+
+  setupOpen.addEventListener('click', onButtonClickShowSetup);
+  setupOpenIcon.addEventListener('keydown', onEnterKeydownShowSetup);
 
   function addHandlersOnSetup() {
     setupSubmit.addEventListener('click', onButtonClickCheckAndHideSetup);
@@ -90,6 +117,7 @@
     fireball.removeEventListener('click', onFireballClick);
   }
 
-  setupOpen.addEventListener('click', onButtonClickShowSetup);
-  setupOpenIcon.addEventListener('keydown', onEnterKeydownShowSetup);
+  function changeElementFill(element, color) {
+    element.style.fill = color;
+  }
 })();
