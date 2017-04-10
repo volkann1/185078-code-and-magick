@@ -816,3 +816,7 @@ input[type=radio]:checked + .review-mark-label {
 .setup-artifacts--on-drag-start {
   outline: 2px dashed red;
 }
+
+.setup-artifacts-cell--drop-zone {
+  background-color: yellow;
+}
