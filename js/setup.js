@@ -10,6 +10,9 @@
   var wizardEyes = setup.querySelector('.wizard-eyes');
   var fireball = setup.querySelector('.setup-fireball-wrap');
   var setupForm = setup.querySelector('.setup-wizard-form');
+  var shopElement = setup.querySelector('.setup-artifacts-shop');
+  var draggedItem = null;
+  var artifactsElement = setup.querySelector('.setup-artifacts');
 
   var coatColor = [
     'rgb(101, 137, 164)',
@@ -92,6 +95,35 @@
     });
   };
 
+  var onElementDragstart = function (evt) {
+    if (evt.target.tagName.toLowerCase() === 'img') {
+      draggedItem = evt.target;
+      evt.dataTransfer.setData('text/plain', evt.target.alt);
+      artifactsElement.classList.add('setup-artifacts--on-drag-start');
+    }
+  };
+
+  var onElementDragover = function (evt) {
+    evt.preventDefault();
+    return false;
+  };
+
+  var onElementDragEnter = function (evt) {
+    evt.target.classList.add('setup-artifacts-cell--drop-zone');
+    evt.preventDefault();
+  };
+
+  var onElementDragLeave = function (evt) {
+    evt.target.classList.remove('setup-artifacts-cell--drop-zone');
+    evt.preventDefault();
+  };
+
+  var onElementDrop = function (evt) {
+    evt.target.classList.remove('setup-artifacts-cell--drop-zone');
+    evt.target.appendChild(draggedItem);
+    artifactsElement.classList.remove('setup-artifacts--on-drag-start');
+  };
+
   setupOpen.addEventListener('click', onButtonClickShowSetup);
   setupOpenIcon.addEventListener('keydown', onEnterKeydownShowSetup);
 
@@ -104,6 +136,11 @@
     wizardCoat.addEventListener('click', onCoatClick);
     wizardEyes.addEventListener('click', onEyesClick);
     fireball.addEventListener('click', onFireballClick);
+    shopElement.addEventListener('dragstart', onElementDragstart);
+    artifactsElement.addEventListener('draggover', onElementDragover);
+    artifactsElement.addEventListener('dragenter', onElementDragEnter);
+    artifactsElement.addEventListener('dragleave', onElementDragLeave);
+    artifactsElement.addEventListener('drop', onElementDrop);
   }
 
   function removeHandlersOnSetup() {
@@ -115,6 +152,11 @@
     wizardCoat.removeEventListener('click', onCoatClick);
     wizardEyes.removeEventListener('click', onEyesClick);
     fireball.removeEventListener('click', onFireballClick);
+    shopElement.removeEventListener('dragstart', onElementDragstart);
+    artifactsElement.removeEventListener('draggover', onElementDragover);
+    artifactsElement.removeEventListener('dragenter', onElementDragEnter);
+    artifactsElement.removeEventListener('dragleave', onElementDragLeave);
+    artifactsElement.removeEventListener('drop', onElementDrop);
   }
 
   function changeElementFill(element, color) {
