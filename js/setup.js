@@ -83,20 +83,6 @@
     addHandlersOnSetup();
   };
 
-  var onCoatClick = function () {
-    window.recolor.changeElementColor(wizardCoat, coatColor, changeElementFill);
-  };
-
-  var onEyesClick = function () {
-    window.recolor.changeElementColor(wizardEyes, eyesColor, changeElementFill);
-  };
-
-  var onFireballClick = function () {
-    window.recolor.changeElementColor(fireball, fireballColor, function (element, color) {
-      element.style.background = color;
-    });
-  };
-
   var onElementDragStart = function (evt) {
     if (evt.target.tagName.toLowerCase() === 'img') {
       draggedItem = evt.target;
@@ -146,6 +132,13 @@
     artifactsElement.classList.remove('setup-artifacts--on-drag-start');
   };
 
+  var fillElement = function (element, color) {
+    element.style.fill = color;
+  };
+
+  var changeElementBackground = function (element, color) {
+    element.style.backgroundColor = color;
+  };
 
   setupOpen.addEventListener('click', onButtonClickShowSetup);
   setupOpenIcon.addEventListener('keydown', onEnterKeydownShowSetup);
@@ -156,9 +149,9 @@
     setupSubmit.addEventListener('keydown', onEnterKeydownCheckAndHideSetup);
     setupClose.addEventListener('keydown', onEnterKeydownHideSetup);
     setupClose.addEventListener('click', onButtonClickHideSetup);
-    wizardCoat.addEventListener('click', onCoatClick);
-    wizardEyes.addEventListener('click', onEyesClick);
-    fireball.addEventListener('click', onFireballClick);
+    window.colorizeElement(wizardCoat, coatColor, fillElement);
+    window.colorizeElement(wizardEyes, eyesColor, fillElement);
+    window.colorizeElement(fireball, fireballColor, changeElementBackground);
     shopElement.addEventListener('dragstart', onElementDragStart);
     artifactsElement.addEventListener('dragover', onElementDragOver);
     artifactsElement.addEventListener('dragenter', onElementDragEnter);
@@ -173,18 +166,11 @@
     setupSubmit.removeEventListener('keydown', onEnterKeydownCheckAndHideSetup);
     setupClose.removeEventListener('keydown', onEnterKeydownHideSetup);
     setupClose.removeEventListener('click', onButtonClickHideSetup);
-    wizardCoat.removeEventListener('click', onCoatClick);
-    wizardEyes.removeEventListener('click', onEyesClick);
-    fireball.removeEventListener('click', onFireballClick);
     shopElement.removeEventListener('dragstart', onElementDragStart);
     artifactsElement.removeEventListener('dragover', onElementDragOver);
     artifactsElement.removeEventListener('dragenter', onElementDragEnter);
     artifactsElement.removeEventListener('dragleave', onElementDragLeave);
     artifactsElement.removeEventListener('drop', onElementDrop);
     artifactsElement.removeEventListener('dragstart', onArtifactDragStart);
-  }
-
-  function changeElementFill(element, color) {
-    element.style.fill = color;
   }
 })();
