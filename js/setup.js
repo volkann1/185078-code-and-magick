@@ -11,8 +11,14 @@
   var fireball = setup.querySelector('.setup-fireball-wrap');
   var setupForm = setup.querySelector('.setup-wizard-form');
   var shopElement = setup.querySelector('.setup-artifacts-shop');
-  var draggedItem = null;
   var artifactsElement = setup.querySelector('.setup-artifacts');
+  var userDialog = document.querySelector('.setup');
+  var similarParentNode = userDialog.querySelector('.setup-similar');
+  var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
+  var similarListElement = userDialog.querySelector('.setup-similar-list');
+  var draggedItem = null;
+
+  var URL = 'https://intensive-javascript-server-kjgvxfepjl.now.sh/code-and-magick/data';
 
   var coatColor = [
     'rgb(101, 137, 164)',
@@ -38,10 +44,16 @@
 
   var toCopy = true;
 
+  var node = document.createElement('div');
+  node.classList.add('error-message');
+  node.classList.add('hidden');
+  document.body.insertAdjacentElement('afterbegin', node);
+
   var onEnterKeydownShowSetup = function (evt) {
     if (window.utils.isEnterKeyDown(evt)) {
       window.utils.showElement(setup);
       addHandlersOnSetup();
+      window.load(URL, successHandler, errorHandler);
     }
   };
 
@@ -49,6 +61,7 @@
     if (window.utils.isEscKeyDown(evt) && evt.target !== setupUserName) {
       window.utils.hideElement(setup);
       removeHandlersOnSetup();
+      hideErrorMessage();
     }
   };
 
@@ -56,6 +69,7 @@
     if (window.utils.isEnterKeyDown(evt)) {
       window.utils.hideElement(setup);
       removeHandlersOnSetup();
+      hideErrorMessage();
     }
   };
 
@@ -63,24 +77,28 @@
     if (window.utils.isEnterKeyDown(evt) && setupForm.validity.valid) {
       window.utils.hideElement(setup);
       removeHandlersOnSetup();
+      hideErrorMessage();
     }
   };
 
   var onButtonClickHideSetup = function () {
     window.utils.hideElement(setup);
     removeHandlersOnSetup();
+    hideErrorMessage();
   };
 
   var onButtonClickCheckAndHideSetup = function () {
     if (setupForm.validity.valid) {
       window.utils.hideElement(setup);
       removeHandlersOnSetup();
+      hideErrorMessage();
     }
   };
 
   var onButtonClickShowSetup = function () {
     window.utils.showElement(setup);
     addHandlersOnSetup();
+    window.load(URL, successHandler, errorHandler);
   };
 
   var onElementDragStart = function (evt) {
@@ -140,8 +158,24 @@
     element.style.backgroundColor = color;
   };
 
+  var successHandler = function (data) {
+    similarListElement.appendChild(window.appendWizards(similarWizardTemplate, data, 4));
+    similarParentNode.classList.remove('hidden');
+  };
+
+  var errorHandler = function (massage) {
+    node.textContent = massage;
+    node.classList.remove('hidden');
+  };
+
   setupOpen.addEventListener('click', onButtonClickShowSetup);
   setupOpenIcon.addEventListener('keydown', onEnterKeydownShowSetup);
+
+  function hideErrorMessage() {
+    if (!node.classList.contains('hidden')) {
+      node.classList.add('hidden');
+    }
+  }
 
   function addHandlersOnSetup() {
     setupSubmit.addEventListener('click', onButtonClickCheckAndHideSetup);
