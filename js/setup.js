@@ -53,7 +53,6 @@
     if (window.utils.isEnterKeyDown(evt)) {
       window.utils.showElement(setup);
       addHandlersOnSetup();
-      window.load(URL, successHandler, errorHandler);
     }
   };
 
@@ -98,7 +97,6 @@
   var onButtonClickShowSetup = function () {
     window.utils.showElement(setup);
     addHandlersOnSetup();
-    window.load(URL, successHandler, errorHandler);
   };
 
   var onElementDragStart = function (evt) {
@@ -168,6 +166,7 @@
     node.classList.remove('hidden');
   };
 
+  window.load(URL, successHandler, errorHandler);
   setupOpen.addEventListener('click', onButtonClickShowSetup);
   setupOpenIcon.addEventListener('keydown', onEnterKeydownShowSetup);
 
