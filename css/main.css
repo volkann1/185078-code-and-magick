@@ -821,3 +821,14 @@ input[type=radio]:checked + .review-mark-label {
 .setup-artifacts-cell--drop-zone {
   background-color: yellow;
 }
+
+.error-message {
+  z-index: 100;
+  margin: 0 auto;
+  text-align: center;
+  background-color: red;
+  left: 0;
+  right: 0;
+  position: absolute;
+  font-size: 30px;
+}
