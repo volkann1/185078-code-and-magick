@@ -10,8 +10,9 @@ window.appendWizards = (function () {
 
   return function (templateContent, wizards, numberOfWizards) {
     var fragment = document.createDocumentFragment();
-    for (var i = 0; i < numberOfWizards; i++) {
-      fragment.appendChild(renderWizard(templateContent, wizards[window.utils.getRandomNumber(0, wizards.length - 1)]));
+    var takeNumber = wizards.length > numberOfWizards ? numberOfWizards : wizards.length;
+    for (var i = 0; i < takeNumber; i++) {
+      fragment.appendChild(renderWizard(templateContent, wizards[i]));
     }
     return fragment;
   };

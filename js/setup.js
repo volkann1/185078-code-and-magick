@@ -12,15 +12,10 @@
   var setupForm = setup.querySelector('.setup-wizard-form');
   var shopElement = setup.querySelector('.setup-artifacts-shop');
   var artifactsElement = setup.querySelector('.setup-artifacts');
-  var userDialog = document.querySelector('.setup');
-  var similarParentNode = userDialog.querySelector('.setup-similar');
-  var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
-  var similarListElement = userDialog.querySelector('.setup-similar-list');
   var draggedItem = null;
+  var node = document.querySelector('.error-message');
 
-  var URL = 'https://intensive-javascript-server-kjgvxfepjl.now.sh/code-and-magick/data';
-
-  var coatColor = [
+  var COAT_COLORS = [
     'rgb(101, 137, 164)',
     'rgb(241, 43, 107)',
     'rgb(146, 100, 161)',
@@ -28,30 +23,31 @@
     'rgb(215, 210, 55)',
     'rgb(0, 0, 0)'];
 
-  var eyesColor = [
+  var EYES_COLORS = [
     'black',
     'red',
     'blue',
     'yellow',
     'green'];
 
-  var fireballColor = [
+  var FIREBALL_COLORS = [
     '#ee4830',
     '#30a8ee',
     '#5ce6c0',
     '#e848d5',
     '#e6e848'];
 
-  var toCopy = true;
+  var coatColor = 'rgb(101, 137, 164)';
+  var eyesColor = 'black';
 
-  var node = document.createElement('div');
-  node.classList.add('error-message');
-  node.classList.add('hidden');
-  document.body.insertAdjacentElement('afterbegin', node);
+  var toCopy = true;
 
   var onEnterKeydownShowSetup = function (evt) {
     if (window.utils.isEnterKeyDown(evt)) {
       window.utils.showElement(setup);
+      if (node.textContent) {
+        node.classList.remove('hidden');
+      }
       addHandlersOnSetup();
     }
   };
@@ -96,6 +92,9 @@
 
   var onButtonClickShowSetup = function () {
     window.utils.showElement(setup);
+    if (node.textContent) {
+      node.classList.remove('hidden');
+    }
     addHandlersOnSetup();
   };
 
@@ -152,21 +151,21 @@
     element.style.fill = color;
   };
 
+  var fillElementAndChangeSimularList = function (element, color) {
+    fillElement(element, color);
+    if (element === wizardCoat) {
+      coatColor = color;
+      window.simularWizards.updateWizards(coatColor, eyesColor);
+    } else if (element === wizardEyes) {
+      eyesColor = color;
+      window.simularWizards.updateWizards(coatColor, eyesColor);
+    }
+  };
+
   var changeElementBackground = function (element, color) {
     element.style.backgroundColor = color;
   };
 
-  var successHandler = function (data) {
-    similarListElement.appendChild(window.appendWizards(similarWizardTemplate, data, 4));
-    similarParentNode.classList.remove('hidden');
-  };
-
-  var errorHandler = function (massage) {
-    node.textContent = massage;
-    node.classList.remove('hidden');
-  };
-
-  window.load(URL, successHandler, errorHandler);
   setupOpen.addEventListener('click', onButtonClickShowSetup);
   setupOpenIcon.addEventListener('keydown', onEnterKeydownShowSetup);
 
@@ -182,9 +181,9 @@
     setupSubmit.addEventListener('keydown', onEnterKeydownCheckAndHideSetup);
     setupClose.addEventListener('keydown', onEnterKeydownHideSetup);
     setupClose.addEventListener('click', onButtonClickHideSetup);
-    window.colorizeElement(wizardCoat, coatColor, fillElement);
-    window.colorizeElement(wizardEyes, eyesColor, fillElement);
-    window.colorizeElement(fireball, fireballColor, changeElementBackground);
+    window.colorizeElement(wizardCoat, COAT_COLORS, fillElementAndChangeSimularList);
+    window.colorizeElement(wizardEyes, EYES_COLORS, fillElementAndChangeSimularList);
+    window.colorizeElement(fireball, FIREBALL_COLORS, changeElementBackground);
     shopElement.addEventListener('dragstart', onElementDragStart);
     artifactsElement.addEventListener('dragover', onElementDragOver);
     artifactsElement.addEventListener('dragenter', onElementDragEnter);
