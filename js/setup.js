@@ -16,29 +16,42 @@
   var node = document.querySelector('.error-message');
 
   var COAT_COLORS = [
-    'rgb(101, 137, 164)',
-    'rgb(241, 43, 107)',
     'rgb(146, 100, 161)',
-    'rgb(56, 159, 117)',
     'rgb(215, 210, 55)',
-    'rgb(0, 0, 0)'];
+    'rgb(241, 43, 107)',
+    'rgb(101, 137, 164)',
+    'rgb(0, 0, 0)',
+    'rgb(56, 159, 117)',
+  ];
 
   var EYES_COLORS = [
-    'black',
     'red',
-    'blue',
+    'orange',
     'yellow',
-    'green'];
+    'green',
+    'lightblue',
+    'blue',
+    'purple'
+  ];
 
   var FIREBALL_COLORS = [
     '#ee4830',
     '#30a8ee',
     '#5ce6c0',
     '#e848d5',
-    '#e6e848'];
+    '#e6e848'
+  ];
 
-  var coatColor = 'rgb(101, 137, 164)';
-  var eyesColor = 'black';
+  var wizard = {
+    onEyesChange: function (color) {
+      window.wizards.eyesColor = color;
+      window.debounce(window.wizards.updateWizards);
+    },
+    onCoatChange: function (color) {
+      window.wizards.coatColor = color;
+      window.debounce(window.wizards.updateWizards);
+    }
+  };
 
   var toCopy = true;
 
@@ -154,11 +167,9 @@
   var fillElementAndChangeSimularList = function (element, color) {
     fillElement(element, color);
     if (element === wizardCoat) {
-      coatColor = color;
-      window.simularWizards.updateWizards(coatColor, eyesColor);
+      wizard.onCoatChange(color);
     } else if (element === wizardEyes) {
-      eyesColor = color;
-      window.simularWizards.updateWizards(coatColor, eyesColor);
+      wizard.onEyesChange(color);
     }
   };
 
@@ -205,4 +216,5 @@
     artifactsElement.removeEventListener('drop', onElementDrop);
     artifactsElement.removeEventListener('dragstart', onArtifactDragStart);
   }
+
 })();

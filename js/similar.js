@@ -6,13 +6,11 @@
   var similarListElement = userDialog.querySelector('.setup-similar-list');
   var URL = 'https://intensive-javascript-server-kjgvxfepjl.now.sh/code-and-magick/data';
   var setup = document.querySelector('.setup');
-  var coatColorIntial = 'rgb(101, 137, 164)';
-  var eyesColorInitial = 'black';
 
   var successHandler = function (data) {
     similarParentNode.classList.remove('hidden');
-    window.simularWizards.list = data;
-    window.simularWizards.updateWizards(coatColorIntial, eyesColorInitial);
+    window.wizards.list = data;
+    window.wizards.updateWizards();
   };
 
   var errorHandler = function (massage) {
@@ -27,12 +25,12 @@
   node.classList.add('hidden');
   document.body.insertAdjacentElement('afterbegin', node);
 
-  var getRank = function (wizard, coatColor, eyesColor) {
+  var getRank = function (wizard) {
     var rank = 0;
-    if (wizard.colorCoat === coatColor) {
+    if (wizard.colorCoat === window.wizards.coatColor) {
       rank += 2;
     }
-    if (wizard.colorEyes === eyesColor) {
+    if (wizard.colorEyes === window.wizards.eyesColor) {
       rank += 1;
     }
     return rank;
@@ -48,12 +46,14 @@
     }
   };
 
-  window.simularWizards = {
+  window.wizards = {
+    coatColor: 'rgb(101, 137, 164)',
+    eyesColor: 'black',
     list: [],
-    updateWizards: function (coatColor, eyesColor) {
+    updateWizards: function () {
       similarListElement.innerHTML = '';
-      similarListElement.appendChild(window.appendWizards(similarWizardTemplate, window.simularWizards.list.sort(function (left, right) {
-        var rankDiff = getRank(right, coatColor, eyesColor) - getRank(left, coatColor, eyesColor);
+      similarListElement.appendChild(window.appendWizards(similarWizardTemplate, window.wizards.list.sort(function (left, right) {
+        var rankDiff = getRank(right) - getRank(left);
         if (rankDiff === 0) {
           rankDiff = namesComparator(left.name, right.name);
         }
