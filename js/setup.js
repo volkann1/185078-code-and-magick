@@ -12,46 +12,55 @@
   var setupForm = setup.querySelector('.setup-wizard-form');
   var shopElement = setup.querySelector('.setup-artifacts-shop');
   var artifactsElement = setup.querySelector('.setup-artifacts');
-  var userDialog = document.querySelector('.setup');
-  var similarParentNode = userDialog.querySelector('.setup-similar');
-  var similarWizardTemplate = document.querySelector('#similar-wizard-template').content;
-  var similarListElement = userDialog.querySelector('.setup-similar-list');
   var draggedItem = null;
+  var node = document.querySelector('.error-message');
 
-  var URL = 'https://intensive-javascript-server-kjgvxfepjl.now.sh/code-and-magick/data';
-
-  var coatColor = [
-    'rgb(101, 137, 164)',
-    'rgb(241, 43, 107)',
+  var COAT_COLORS = [
     'rgb(146, 100, 161)',
-    'rgb(56, 159, 117)',
     'rgb(215, 210, 55)',
-    'rgb(0, 0, 0)'];
+    'rgb(241, 43, 107)',
+    'rgb(101, 137, 164)',
+    'rgb(0, 0, 0)',
+    'rgb(56, 159, 117)',
+  ];
 
-  var eyesColor = [
-    'black',
+  var EYES_COLORS = [
     'red',
-    'blue',
+    'orange',
     'yellow',
-    'green'];
+    'green',
+    'lightblue',
+    'blue',
+    'purple'
+  ];
 
-  var fireballColor = [
+  var FIREBALL_COLORS = [
     '#ee4830',
     '#30a8ee',
     '#5ce6c0',
     '#e848d5',
-    '#e6e848'];
+    '#e6e848'
+  ];
+
+  var wizard = {
+    onEyesChange: function (color) {
+      window.wizards.eyesColor = color;
+      window.debounce(window.wizards.updateWizards);
+    },
+    onCoatChange: function (color) {
+      window.wizards.coatColor = color;
+      window.debounce(window.wizards.updateWizards);
+    }
+  };
 
   var toCopy = true;
-
-  var node = document.createElement('div');
-  node.classList.add('error-message');
-  node.classList.add('hidden');
-  document.body.insertAdjacentElement('afterbegin', node);
 
   var onEnterKeydownShowSetup = function (evt) {
     if (window.utils.isEnterKeyDown(evt)) {
       window.utils.showElement(setup);
+      if (node.textContent) {
+        node.classList.remove('hidden');
+      }
       addHandlersOnSetup();
     }
   };
@@ -96,6 +105,9 @@
 
   var onButtonClickShowSetup = function () {
     window.utils.showElement(setup);
+    if (node.textContent) {
+      node.classList.remove('hidden');
+    }
     addHandlersOnSetup();
   };
 
@@ -152,21 +164,19 @@
     element.style.fill = color;
   };
 
+  var fillElementAndChangeSimularList = function (element, color) {
+    fillElement(element, color);
+    if (element === wizardCoat) {
+      wizard.onCoatChange(color);
+    } else if (element === wizardEyes) {
+      wizard.onEyesChange(color);
+    }
+  };
+
   var changeElementBackground = function (element, color) {
     element.style.backgroundColor = color;
   };
 
-  var successHandler = function (data) {
-    similarListElement.appendChild(window.appendWizards(similarWizardTemplate, data, 4));
-    similarParentNode.classList.remove('hidden');
-  };
-
-  var errorHandler = function (massage) {
-    node.textContent = massage;
-    node.classList.remove('hidden');
-  };
-
-  window.load(URL, successHandler, errorHandler);
   setupOpen.addEventListener('click', onButtonClickShowSetup);
   setupOpenIcon.addEventListener('keydown', onEnterKeydownShowSetup);
 
@@ -182,9 +192,9 @@
     setupSubmit.addEventListener('keydown', onEnterKeydownCheckAndHideSetup);
     setupClose.addEventListener('keydown', onEnterKeydownHideSetup);
     setupClose.addEventListener('click', onButtonClickHideSetup);
-    window.colorizeElement(wizardCoat, coatColor, fillElement);
-    window.colorizeElement(wizardEyes, eyesColor, fillElement);
-    window.colorizeElement(fireball, fireballColor, changeElementBackground);
+    window.colorizeElement(wizardCoat, COAT_COLORS, fillElementAndChangeSimularList);
+    window.colorizeElement(wizardEyes, EYES_COLORS, fillElementAndChangeSimularList);
+    window.colorizeElement(fireball, FIREBALL_COLORS, changeElementBackground);
     shopElement.addEventListener('dragstart', onElementDragStart);
     artifactsElement.addEventListener('dragover', onElementDragOver);
     artifactsElement.addEventListener('dragenter', onElementDragEnter);
@@ -206,4 +216,5 @@
     artifactsElement.removeEventListener('drop', onElementDrop);
     artifactsElement.removeEventListener('dragstart', onArtifactDragStart);
   }
+
 })();
