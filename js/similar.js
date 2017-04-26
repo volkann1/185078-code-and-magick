@@ -1,4 +1,5 @@
 'use strict';
+
 (function () {
   var userDialog = document.querySelector('.setup');
   var similarParentNode = userDialog.querySelector('.setup-similar');

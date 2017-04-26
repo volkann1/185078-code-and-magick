@@ -1,4 +1,5 @@
 'use strict';
+
 window.dragAndDrop = (function () {
   return {
     drag: function (handle, draggedElement) {
