@@ -1,4 +1,5 @@
 'use strict';
+
 window.renderStatistics = function (ctx, names, times) {
   var max = window.utils.getMaxItemFromArray(times, -1);
   var histogramHeight = 150;
